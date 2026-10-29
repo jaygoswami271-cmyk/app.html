@@ -3,41 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Goswami Fast Food - Manager</title>
+  <title>Goswami Manager</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Goswami App">
   <style>
     :root {
       --primary: #d9381e;
       --bg: #f4f5f8;
       --card: #ffffff;
       --text: #222222;
-      --muted: #666666;
+      --muted: #777777;
       --green: #2e7d32;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 90px; }
     
     header { background: var(--primary); color: white; padding: 18px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
     header h1 { font-size: 19px; font-weight: 700; }
     header p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
 
-    .tab-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
-    .tab-btn { background: none; border: none; font-size: 11px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 600; width: 25%; }
-    .tab-btn.active { color: var(--primary); }
-    .tab-btn span { font-size: 18px; }
+    .tab-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+    .tab-btn { background: none; border: none; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 600; width: 25%; cursor: pointer; }
+    .tab-btn.active { color: var(--primary); font-weight: 700; }
+    .tab-btn span { font-size: 20px; pointer-events: none; }
 
     .container { padding: 14px; }
     .view-section { display: none; }
     .view-section.active { display: block; }
 
     .card { background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-    .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: #111; display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: #111; }
 
-    input, select, textarea { width: 100%; padding: 10px 12px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; background: #fafafa; }
-    button.btn-primary { width: 100%; background: var(--primary); color: white; border: none; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
-    button.btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    input { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #fafafa; }
+    button.btn-primary { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+    button.btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
 
     .item-row { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
     .item-row:last-child { border-bottom: none; }
@@ -122,84 +121,99 @@
   </div>
 
   <nav class="tab-nav">
-    <button class="tab-btn active" onclick="showTab('bookings')"><span>📋</span>Bookings</button>
-    <button class="tab-btn" onclick="showTab('karigar')"><span>👨‍🍳</span>Karigar</button>
-    <button class="tab-btn" onclick="showTab('menu')"><span>🍲</span>Menu</button>
-    <button class="tab-btn" onclick="showTab('expenses')"><span>💰</span>Kharcha</button>
+    <button class="tab-btn active" id="btn-bookings" onclick="showTab('bookings')"><span>📋</span>Bookings</button>
+    <button class="tab-btn" id="btn-karigar" onclick="showTab('karigar')"><span>👨‍🍳</span>Karigar</button>
+    <button class="tab-btn" id="btn-menu" onclick="showTab('menu')"><span>🍲</span>Menu</button>
+    <button class="tab-btn" id="btn-expenses" onclick="showTab('expenses')"><span>💰</span>Kharcha</button>
   </nav>
 
   <script>
     function showTab(tabId) {
-      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.view-section').forEach(function(el) {
+        el.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(function(el) {
+        el.classList.remove('active');
+      });
+      var target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      var btn = document.getElementById('btn-' + tabId);
+      if (btn) btn.classList.add('active');
     }
 
-    let bookings = JSON.parse(localStorage.getItem('g_bookings') || '[]');
-    let karigars = JSON.parse(localStorage.getItem('g_karigars') || '[]');
-    let menuItems = JSON.parse(localStorage.getItem('g_menu') || '[]');
-    let expenses = JSON.parse(localStorage.getItem('g_expenses') || '[]');
+    var bookings = JSON.parse(localStorage.getItem('g_bookings') || '[]');
+    var karigars = JSON.parse(localStorage.getItem('g_karigars') || '[]');
+    var menuItems = JSON.parse(localStorage.getItem('g_menu') || '[]');
+    var expenses = JSON.parse(localStorage.getItem('g_expenses') || '[]');
 
     function renderAll() {
-      // Bookings Render
-      const bList = document.getElementById('bookingList');
-      bList.innerHTML = bookings.length === 0 ? '<p style="color:#888;">Koi booking nahi hai.</p>' : bookings.map((b, i) => `
-        <div class="item-row">
-          <div>
-            <strong>${b.name}</strong> (${b.guests} log)<br>
-            <small style="color:#555;">📅 ${b.date} | 📞 ${b.phone}</small><br>
-            <small>Total: ₹${b.total} | Adv: ₹${b.advance}</small><br>
-            <span class="${(b.total - b.advance) > 0 ? 'balance-tag' : 'paid-tag'}">
-              Baaki: ₹${b.total - b.advance}
-            </span>
-          </div>
-          <button class="btn-delete" onclick="deleteItem('booking', ${i})">Hatao</button>
-        </div>
-      `).join('');
+      var bList = document.getElementById('bookingList');
+      if (bookings.length === 0) {
+        bList.innerHTML = '<p style="color:#888;">Koi booking nahi hai.</p>';
+      } else {
+        bList.innerHTML = bookings.map(function(b, i) {
+          var bal = b.total - b.advance;
+          return '<div class="item-row">' +
+            '<div><strong>' + b.name + '</strong> (' + b.guests + ' log)<br>' +
+            '<small style="color:#555;">📅 ' + b.date + ' | 📞 ' + b.phone + '</small><br>' +
+            '<small>Total: ₹' + b.total + ' | Adv: ₹' + b.advance + '</small><br>' +
+            '<span class="' + (bal > 0 ? 'balance-tag' : 'paid-tag') + '">Baaki: ₹' + bal + '</span>' +
+            '</div>' +
+            '<button class="btn-delete" onclick="deleteItem(\'booking\', ' + i + ')">Hatao</button>' +
+          '</div>';
+        }).join('');
+      }
 
-      // Karigar Render
-      const kList = document.getElementById('karigarList');
-      kList.innerHTML = karigars.length === 0 ? '<p style="color:#888;">Koi hisaab nahi hai.</p>' : karigars.map((k, i) => `
-        <div class="item-row">
-          <div>
-            <strong>${k.name}</strong> - <span class="badge">${k.event}</span><br>
-            <small>Mehnatana: ₹${k.pay} | Diya: ₹${k.advance}</small><br>
-            <span class="${(k.pay - k.advance) > 0 ? 'balance-tag' : 'paid-tag'}">
-              Dena baaki: ₹${k.pay - k.advance}
-            </span>
-          </div>
-          <button class="btn-delete" onclick="deleteItem('karigar', ${i})">Hatao</button>
-        </div>
-      `).join('');
+      var kList = document.getElementById('karigarList');
+      if (karigars.length === 0) {
+        kList.innerHTML = '<p style="color:#888;">Koi hisaab nahi hai.</p>';
+      } else {
+        kList.innerHTML = karigars.map(function(k, i) {
+          var kBal = k.pay - k.advance;
+          return '<div class="item-row">' +
+            '<div><strong>' + k.name + '</strong> - <span class="badge">' + k.event + '</span><br>' +
+            '<small>Rate: ₹' + k.pay + ' | Diya: ₹' + k.advance + '</small><br>' +
+            '<span class="' + (kBal > 0 ? 'balance-tag' : 'paid-tag') + '">Dena baaki: ₹' + kBal + '</span>' +
+            '</div>' +
+            '<button class="btn-delete" onclick="deleteItem(\'karigar\', ' + i + ')">Hatao</button>' +
+          '</div>';
+        }).join('');
+      }
 
-      // Menu Render
-      const mList = document.getElementById('menuList');
-      mList.innerHTML = menuItems.length === 0 ? '<p style="color:#888;">Menu khali hai.</p>' : menuItems.map((m, i) => `
-        <div class="item-row">
-          <div><strong>${m.item}</strong></div>
-          <div><span style="font-weight:bold; margin-right:8px;">${m.rate}</span><button class="btn-delete" onclick="deleteItem('menu', ${i})">Hatao</button></div>
-        </div>
-      `).join('');
+      var mList = document.getElementById('menuList');
+      if (menuItems.length === 0) {
+        mList.innerHTML = '<p style="color:#888;">Menu khali hai.</p>';
+      } else {
+        mList.innerHTML = menuItems.map(function(m, i) {
+          return '<div class="item-row">' +
+            '<div><strong>' + m.item + '</strong></div>' +
+            '<div><span style="font-weight:bold; margin-right:8px;">' + m.rate + '</span>' +
+            '<button class="btn-delete" onclick="deleteItem(\'menu\', ' + i + ')">Hatao</button></div>' +
+          '</div>';
+        }).join('');
+      }
 
-      // Expenses Render
-      const eList = document.getElementById('expenseList');
-      let totalEx = expenses.reduce((s, e) => s + Number(e.amount), 0);
-      eList.innerHTML = expenses.length === 0 ? '<p style="color:#888;">Koi kharcha nahi.</p>' : `
-        <div style="margin-bottom:8px; font-weight:bold; color:#d9381e;">Total Kharcha: ₹${totalEx}</div>
-        ` + expenses.map((e, i) => `
-        <div class="item-row">
-          <div>${e.desc}</div>
-          <div><strong style="margin-right:8px;">₹${e.amount}</strong><button class="btn-delete" onclick="deleteItem('expense', ${i})">Hatao</button></div>
-        </div>
-      `).join('');
+      var eList = document.getElementById('expenseList');
+      var totalEx = expenses.reduce(function(s, e) { return s + Number(e.amount); }, 0);
+      if (expenses.length === 0) {
+        eList.innerHTML = '<p style="color:#888;">Koi kharcha nahi.</p>';
+      } else {
+        eList.innerHTML = '<div style="margin-bottom:8px; font-weight:bold; color:#d9381e;">Total Kharcha: ₹' + totalEx + '</div>' +
+        expenses.map(function(e, i) {
+          return '<div class="item-row">' +
+            '<div>' + e.desc + '</div>' +
+            '<div><strong style="margin-right:8px;">₹' + e.amount + '</strong>' +
+            '<button class="btn-delete" onclick="deleteItem(\'expense\', ' + i + ')">Hatao</button></div>' +
+          '</div>';
+        }).join('');
+      }
     }
 
     function addBooking() {
-      const name = document.getElementById('bName').value;
-      if(!name) return alert('Naam bhariye');
+      var name = document.getElementById('bName').value;
+      if (!name) { alert('Naam bhariye'); return; }
       bookings.push({
-        name,
+        name: name,
         phone: document.getElementById('bPhone').value,
         date: document.getElementById('bDate').value,
         guests: document.getElementById('bGuests').value,
@@ -217,4 +231,54 @@
     }
 
     function addKarigar() {
-      const name = document.getElementById('k
+      var name = document.getElementById('kName').value;
+      if (!name) { alert('Karigar ka naam bhariye'); return; }
+      karigars.push({
+        name: name,
+        event: document.getElementById('kEvent').value,
+        pay: Number(document.getElementById('kPay').value || 0),
+        advance: Number(document.getElementById('kAdvance').value || 0)
+      });
+      localStorage.setItem('g_karigars', JSON.stringify(karigars));
+      document.getElementById('kName').value = '';
+      document.getElementById('kEvent').value = '';
+      document.getElementById('kPay').value = '';
+      document.getElementById('kAdvance').value = '';
+      renderAll();
+    }
+
+    function addMenuItem() {
+      var item = document.getElementById('mItem').value;
+      var rate = document.getElementById('mRate').value;
+      if (!item) { alert('Dish ka naam bhariye'); return; }
+      menuItems.push({ item: item, rate: rate });
+      localStorage.setItem('g_menu', JSON.stringify(menuItems));
+      document.getElementById('mItem').value = '';
+      document.getElementById('mRate').value = '';
+      renderAll();
+    }
+
+    function addExpense() {
+      var desc = document.getElementById('eDesc').value;
+      var amount = document.getElementById('eAmount').value;
+      if (!desc || !amount) { alert('Vivaran aur rashi bhariye'); return; }
+      expenses.push({ desc: desc, amount: amount });
+      localStorage.setItem('g_expenses', JSON.stringify(expenses));
+      document.getElementById('eDesc').value = '';
+      document.getElementById('eAmount').value = '';
+      renderAll();
+    }
+
+    function deleteItem(type, index) {
+      if (!confirm('Kya aap ise hatana chahte hain?')) return;
+      if (type === 'booking') { bookings.splice(index, 1); localStorage.setItem('g_bookings', JSON.stringify(bookings)); }
+      if (type === 'karigar') { karigars.splice(index, 1); localStorage.setItem('g_karigars', JSON.stringify(karigars)); }
+      if (type === 'menu') { menuItems.splice(index, 1); localStorage.setItem('g_menu', JSON.stringify(menuItems)); }
+      if (type === 'expense') { expenses.splice(index, 1); localStorage.setItem('g_expenses', JSON.stringify(expenses)); }
+      renderAll();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
